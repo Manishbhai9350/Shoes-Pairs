@@ -1,12 +1,15 @@
 import { Canvas } from "@react-three/fiber";
 import Stripes from "./components/stripes";
-import Shoes from "./components/shoes";
+import ShoesComponent from "./components/shoes";
+import { Suspense } from "react";
 
 const Scene = () => {
   return (
     <Canvas>
-      <Stripes />
-      <Shoes />
+      <Suspense fallback={null}>
+        <Stripes />
+        <ShoesComponent />
+      </Suspense>
     </Canvas>
   );
 };

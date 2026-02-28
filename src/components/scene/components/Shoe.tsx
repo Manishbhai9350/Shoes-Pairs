@@ -52,6 +52,7 @@ const Shoe = ({
   };
 
   const texture = useTexture(image_url);
+  
 
   useEffect(() => {
     texture.colorSpace = SRGBColorSpace;
@@ -63,37 +64,37 @@ const Shoe = ({
     }
   }, [texture]);
 
-  useEffect(() => {
-    const cols = Math.max(1, totalCols);
-    const rows = Math.max(1, totalRows);
+  // useEffect(() => {
+  //   const cols = Math.max(1, totalCols);
+  //   const rows = Math.max(1, totalRows);
 
-    const nx = cols === 1 ? 0 : (x / (cols - 1)) * 2 - 1;
-    const ny = rows === 1 ? 0 : (y / (rows - 1)) * 2 - 1;
+  //   const nx = cols === 1 ? 0 : (x / (cols - 1)) * 2 - 1;
+  //   const ny = rows === 1 ? 0 : (y / (rows - 1)) * 2 - 1;
 
-    const dist = Math.sqrt(nx * nx + ny * ny);
-    const safeCurvature = Math.min(Math.max(curvature, 0), 5);
-    const depth = Math.sin(dist * Math.PI * 0.5) * safeCurvature * 2;
+  //   const dist = Math.sqrt(nx * nx + ny * ny);
+  //   const safeCurvature = Math.min(Math.max(curvature, 0), 5);
+  //   const depth = Math.sin(dist * Math.PI * 0.5) * safeCurvature * 2;
 
-    Data.current.targetPosition.x =
-      -gridWidth / 2 + x * (cellW + gapW) + cellW / 2;
+  //   Data.current.targetPosition.x =
+  //     -gridWidth / 2 + x * (cellW + gapW) + cellW / 2;
 
-    Data.current.targetPosition.y =
-      -gridHeight / 2 + y * (cellH + gapH) + cellH / 2;
+  //   Data.current.targetPosition.y =
+  //     -gridHeight / 2 + y * (cellH + gapH) + cellH / 2;
 
-    Data.current.targetPosition.z = -depth;
-  }, [
-    x,
-    y,
-    curvature,
-    gridWidth,
-    gridHeight,
-    cellW,
-    gapW,
-    cellH,
-    gapH,
-    totalCols,
-    totalRows,
-  ]);
+  //   Data.current.targetPosition.z = -depth;
+  // }, [
+  //   x,
+  //   y,
+  //   curvature,
+  //   gridWidth,
+  //   gridHeight,
+  //   cellW,
+  //   gapW,
+  //   cellH,
+  //   gapH,
+  //   totalCols,
+  //   totalRows,
+  // ]);
 
   useFrame((_, delta) => {
     const mesh = meshRef.current;
