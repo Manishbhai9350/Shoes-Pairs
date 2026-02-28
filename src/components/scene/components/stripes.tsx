@@ -8,7 +8,7 @@ import { useControls } from "leva";
 export const StripeMaterial = shaderMaterial(
   {
     uTime: { value: 0 },
-    scale: { value: 2 },
+    scale: { value: 4 },
     aspect: { value: 1 },
   },
   stripeVertex,
@@ -22,14 +22,16 @@ const Stripes = () => {
 
   const stripeRef = useRef();
 
-  const { scale } = useControls({
-    scale: {
-      value: 2,
-      min: 0.1,
-      max: 10,
-      step: 0.01,
-    },
-  });
+  const scale = 4;
+
+  // const { scale } = useControls({
+  //   scale: {
+  //     value: 4,
+  //     min: 0.1,
+  //     max: 10,
+  //     step: 0.01,
+  //   },
+  // });
 
   useEffect(() => {
     if (!stripeRef.current) return;

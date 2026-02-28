@@ -1,12 +1,16 @@
+import { levaStore, LevaStoreProvider } from "leva";
 import "./App.css";
 import Scene from "./components/scene";
 
 function App() {
 
+
   return (
-    <main>
-      <Scene />
-    </main>
+    <LevaStoreProvider store={levaStore}>
+      <main>
+        <Scene />
+      </main>
+    </LevaStoreProvider>
   );
 }
 
