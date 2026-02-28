@@ -24,7 +24,7 @@ export type ShoePrimaryColor =
 // export Type for one shoe item
 export interface ShoeType {
   title: string;
-  price: string | null;
+  price: string;
   image_url: string;
   product_url: string;
   brand: ShoeBrand;

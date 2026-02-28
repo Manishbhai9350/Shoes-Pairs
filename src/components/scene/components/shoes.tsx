@@ -6,6 +6,7 @@ import type { ShoeBrand, Shoes } from "../../../data/types";
 import { useTexture } from "@react-three/drei";
 import { useControls } from "leva";
 import type { LayerType } from "./types";
+import Layer from "./Layer";
 
 const Shoes = () => {
   const [ActiveBrand, setActiveBrand] = useState<ShoeBrand>("Nike");
@@ -14,14 +15,6 @@ const Shoes = () => {
   );
   const [FilteredShoes, setFilteredShoes] = useState<Shoes>(ShoesData);
   const [Layers, setLayers] = useState<LayerType[]>([]);
-
-  const { curvature } = useControls({
-    curvature: {
-      min: 0,
-      max: 1,
-      value: 0.2,
-    },
-  });
 
   useEffect(() => {
     const Nikes = ShoesData.filter((S) => S.brand == "Nike");
@@ -61,7 +54,13 @@ const Shoes = () => {
     return () => {};
   }, [Layers]);
 
-  return <group></group>;
+  return (
+    <group>
+      {Layers.map((L) => (
+        <Layer key={L.type} layer={L} />
+      ))}
+    </group>
+  );
 };
 
 useTexture.preload(ShoesData.map((S) => S.image_url));
