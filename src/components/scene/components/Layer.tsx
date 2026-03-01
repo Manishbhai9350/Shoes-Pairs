@@ -1,39 +1,15 @@
-import { useEffect, useRef } from "react";
-import Shoe from "./Shoe";
-import type { LayerType } from "./types";
-import type { Mesh } from "three";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import type { LayerProps, LayerType, TargetType } from "./types";
 import { CONFIG } from "../config";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-
-interface LayerProps {
-  layer: LayerType;
-  activeBrand: string;
-  activeNike: string;
-}
-
-interface TargetsType {
-  position: {
-    x: number;
-    y: number;
-    z: number;
-  };
-  opacity: number;
-}
+import { useThree } from "@react-three/fiber";
 
 const Layer = ({ layer, activeBrand, activeNike }: LayerProps) => {
-  const meshRefs = useRef<Mesh[]>([]);
-  const targets = useRef<TargetsType[]>([]);
+  const [Targets, setTargets] = useState<TargetType[]>([]);
 
   const { width, height } = useThree((v) => v.viewport);
 
-  const registerRef = (mesh: Mesh | null) => {
-    if (mesh) meshRefs.current.push(mesh);
-  };
-
   useEffect(() => {
-    targets.current = layer.items.map((_, index) => {
+    layer.items.forEach((item, index) => {
       const cellW = width * CONFIG.widthPercentage;
       const cellH = height * CONFIG.widthPercentage;
 
@@ -49,67 +25,30 @@ const Layer = ({ layer, activeBrand, activeNike }: LayerProps) => {
       const x = index % totalCols;
       const y = Math.floor(index / totalCols);
 
-      return {
-        position: {
-          x: -gridWidth / 2 + x * (cellW + gapW) + cellW / 2,
-          y: -gridHeight / 2 + y * (cellH + gapH) + cellH / 2,
-          z: 0,
+      setTargets((T) => [
+        ...T,
+        {
+          position: {
+            x: -gridWidth / 2 + x * (cellW + gapW) + cellW / 2,
+            y: -gridHeight / 2 + y * (cellH + gapH) + cellH / 2,
+            z: 0,
+          },
+          opacity: 1,
         },
-        opacity: 1,
-      };
+      ]);
     });
 
-    console.log(meshRefs.current.length);
-    if (meshRefs.current.length == 0) return;
+    return () => {
+      setTargets([]);
+    };
+  }, [layer.items.length, width, height]);
 
-    const Positions = meshRefs.current.map((M) => M.position);
-    gsap.set(Positions, {
-      x: (i) => targets.current[i].position.x,
-      y: (i) => targets.current[i].position.y,
-      z: 5,
-    });
-  }, []);
-
-  useGSAP(() => {
-    if (layer.type == activeBrand) {
-      layer.animate = "in";
-      
-      const Positions = meshRefs.current.map((M) => M.position);
-      gsap.fromTo(
-        Positions,
-        {
-          z: 5,
-        },
-        {
-          z: 0,
-        },
-      );
-    }
-
+  useEffect(() => {
+    console.log(Targets);
     return () => {};
-  }, [activeBrand]);
+  }, [Targets]);
 
-  // useFrame((_, delta) => {
-  //   const speed = 4;
-  //   const t = 1 - Math.exp(-speed * delta);
-
-  //   meshRefs.current.forEach((mesh, i) => {
-  //     const target = targets.current[i];
-  //     if (!mesh || !target) return;
-
-  //     mesh.position.x += (target.position.x - mesh.position.x) * t;
-  //     mesh.position.y += (target.position.y - mesh.position.y) * t;
-  //     mesh.position.z += (target.position.z - mesh.position.z) * t;
-  //   });
-  // });
-
-  return (
-    <group>
-      {layer.items.map((item, i) => (
-        <Shoe key={i} {...item} register={registerRef} />
-      ))}
-    </group>
-  );
+  return <group></group>;
 };
 
 export default Layer;

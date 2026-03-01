@@ -6,10 +6,10 @@ import { Suspense } from "react";
 const Scene = () => {
   return (
     <Canvas>
-      <Suspense fallback={null}>
+      {/* <Suspense fallback={null}> */}
         <Stripes />
         <ShoesComponent />
-      </Suspense>
+      {/* </Suspense> */}
     </Canvas>
   );
 };

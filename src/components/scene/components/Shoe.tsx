@@ -1,36 +1,23 @@
-import { Mesh, SRGBColorSpace } from "three";
-import type { ShoeType } from "../../../data/types";
-import { useFrame, useThree } from "@react-three/fiber";
-import { CONFIG } from "../config";
-import { useTexture } from "@react-three/drei";
-import { memo, useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
+import type { TargetType } from "./types";
+import type { Mesh } from "three";
 
-interface ShoeProps extends ShoeType {
-  register: (mesh: Mesh | null) => void;
+interface ShoeProps {
+  target: TargetType;
 }
 
-const Shoe = ({ image_url, register }: ShoeProps) => {
-  const [aspect, setAspect] = useState(1);
-  const { width } = useThree((v) => v.viewport);
+const Shoe = ({ target }: ShoeProps) => {
 
-  const texture = useTexture(image_url);
+  const meshRef = useRef<Mesh>(null);
 
-  // useEffect(() => {
-  //   texture.colorSpace = SRGBColorSpace;
-  //   const img = texture.image as { width: number; height: number };
-  //   if (img?.width && img?.height) {
-  //     setAspect(img.height / img.width);
-  //   }
-  // }, [texture]);
 
-  const planeWidth = width * CONFIG.widthPercentage;
-  const planeHeight = planeWidth * aspect;
 
   return (
-    <mesh ref={register}>
-      <planeGeometry args={[planeWidth, planeHeight]} />
-      <meshBasicMaterial color={'red'} /* map={texture} */ />
+    <mesh ref={meshRef}>
+      <planeGeometry args={[1, 1]} />
+      <meshBasicMaterial color={"yellow"} />
     </mesh>
   );
 };
-export default memo(Shoe);
+
+export default Shoe;

@@ -17,12 +17,18 @@ const Shoes = () => {
   const [Layers, setLayers] = useState<LayerType[]>([]);
 
   useEffect(() => {
-    const Nikes = ShoesData.filter((S) => S.brand == "Nike");
-    const NewBalance = ShoesData.filter((S) => S.brand == "New Balance");
+    const Nikes = ShoesData.filter((S) =>
+      S.brand.toLowerCase().includes("nike"),
+    );
+    const NewBalance = ShoesData.filter((S) =>
+      S.brand.toLowerCase().trim().includes("new balance"),
+    );
 
     const Under150 = ShoesData.filter(
       (S) => Number(S.price?.replace("$", "")) < 150,
     );
+
+    console.group(Nikes.length, NewBalance.length);
 
     setLayers([
       {
@@ -48,16 +54,15 @@ const Shoes = () => {
     return () => {};
   }, []);
 
-  useEffect(() => {
-    console.log(Layers);
-
-    return () => {};
-  }, [Layers]);
-
   return (
     <group>
       {Layers.map((L) => (
-        <Layer key={L.type} activeBrand={ActiveBrand} activeNike={ActiveNike} layer={L} />
+        <Layer
+          key={L.type}
+          activeBrand={ActiveBrand}
+          activeNike={ActiveNike}
+          layer={L}
+        />
       ))}
     </group>
   );
