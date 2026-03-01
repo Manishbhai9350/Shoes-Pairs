@@ -5,84 +5,31 @@ import { CONFIG } from "../config";
 import { useTexture } from "@react-three/drei";
 import { memo, useEffect, useRef, useState } from "react";
 
-const Shoe = ({
-  index,
-  image_url,
-  totalItems,
-}: ShoeType & { index: number; totalItems: number }) => {
+interface ShoeProps extends ShoeType {
+  register: (mesh: Mesh | null) => void;
+}
+
+const Shoe = ({ image_url, register }: ShoeProps) => {
   const [aspect, setAspect] = useState(1);
-  const { width, height } = useThree((v) => v.viewport);
-
-  const meshRef = useRef<Mesh>(null!);
-  const Data = useRef({
-    targetPosition: {
-      x: 0,
-      y: 0,
-      z: 0,
-    },
-  });
-
-  const cellW = width * CONFIG.widthPercentage;
-  const cellH = height * CONFIG.widthPercentage;
-
-  const gapW = width * CONFIG.gapPercentage;
-  const gapH = height * CONFIG.gapPercentage;
-
-  const totalCols = CONFIG.columns;
-  const totalRows = Math.ceil(totalItems / CONFIG.columns); // pass total count as prop
-
-  const gridWidth = totalCols * cellW + (totalCols - 1) * gapW;
-  const gridHeight = totalRows * cellH + (totalRows - 1) * gapH;
-
-  const x = index % CONFIG.columns;
-  const y = Math.floor(index / CONFIG.columns);
-
-  const position: [number, number, number] = [
-    // -gridWidth / 2 + x * (cellW + gapW) + cellW / 2,
-    // -gridHeight / 2 + y * (cellH + gapH) + cellH / 2,
-
-    0, 0, 0,
-  ];
-
-  Data.current.targetPosition = {
-    x: -gridWidth / 2 + x * (cellW + gapW) + cellW / 2,
-    y: -gridHeight / 2 + y * (cellH + gapH) + cellH / 2,
-    z: position[2],
-  };
+  const { width } = useThree((v) => v.viewport);
 
   const texture = useTexture(image_url);
 
-  useEffect(() => {
-    texture.colorSpace = SRGBColorSpace;
-
-    const img = texture.image as { width: number; height: number };
-
-    if (img && img?.width && img?.height) {
-      setAspect(img.height / img.width); // height relative to width
-    }
-  }, [texture]);
-
-  useFrame((_, delta) => {
-    const mesh = meshRef.current;
-    if (!mesh) return;
-
-    const target = Data.current.targetPosition;
-
-    const speed = 4;
-    const t = 1 - Math.exp(-speed * delta);
-
-    mesh.position.x += (target.x - mesh.position.x) * t;
-    mesh.position.y += (target.y - mesh.position.y) * t;
-    mesh.position.z += (target.z - mesh.position.z) * t;
-  });
+  // useEffect(() => {
+  //   texture.colorSpace = SRGBColorSpace;
+  //   const img = texture.image as { width: number; height: number };
+  //   if (img?.width && img?.height) {
+  //     setAspect(img.height / img.width);
+  //   }
+  // }, [texture]);
 
   const planeWidth = width * CONFIG.widthPercentage;
   const planeHeight = planeWidth * aspect;
 
   return (
-    <mesh ref={meshRef} position={position}>
+    <mesh ref={register}>
       <planeGeometry args={[planeWidth, planeHeight]} />
-      <meshBasicMaterial transparent map={texture} />
+      <meshBasicMaterial color={'red'} /* map={texture} */ />
     </mesh>
   );
 };

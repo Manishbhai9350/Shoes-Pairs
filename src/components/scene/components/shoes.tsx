@@ -9,7 +9,7 @@ import type { LayerType } from "./types";
 import Layer from "./Layer";
 
 const Shoes = () => {
-  const [ActiveBrand, setActiveBrand] = useState<ShoeBrand>("Nike");
+  const [ActiveBrand, setActiveBrand] = useState<ShoeBrand | "mixed">("Nike");
   const [ActiveNike, setActiveNike] = useState<"all" | "dunk" | "new-balance">(
     "all",
   );
@@ -57,12 +57,12 @@ const Shoes = () => {
   return (
     <group>
       {Layers.map((L) => (
-        <Layer key={L.type} layer={L} />
+        <Layer key={L.type} activeBrand={ActiveBrand} activeNike={ActiveNike} layer={L} />
       ))}
     </group>
   );
 };
 
-useTexture.preload(ShoesData.map((S) => S.image_url));
+// useTexture.preload(ShoesData.map((S) => S.image_url));
 
 export default Shoes;
